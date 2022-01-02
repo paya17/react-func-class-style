@@ -1,0 +1,1 @@
+# react-func-class-style

@@ -18,13 +18,13 @@ function FuncComp(props) {
   var [number, setNumber] = useState(props.initNumber);  
   var [_date, setDate] = useState((new Date()).toString()); 
 
-  useEffect(function() { //'useEffect함수'의 인자로 전달한 함수 -> side effect기능
-    document.title = number + ':' + _date; 
+  useEffect(function() { //(useEffect함수의 첫번째 인자로 전달한 함수(콜백함수!) -> side effect기능)
+    document.title = number; //수정 -> *number라는 state의 값이 변경됐을 때만, 콜백함수와 clean up함수가 호출되도록 하고싶음 (*바뀐 값만 처리하게 함으로써 성능을 향상!)
     
-    return function() { //*useEffect의 첫번째 인자로 전달한 함수의, "return값"인 함수 -> 'clean up(정리)'
+    return function() { //(useEffect의 첫번째 인자로 전달한 함수의, "return값"인 함수 -> clean up(정리))
       //아무거나..
     }
-  }); 
+  }, [number]); //**useEffect함수의 두번째 인자로 배열을 전달하고 그 배열에 'number'값을 넣는다 -> "'number'라는 state의 값이 바뀌었을 때만, 첫번째 인자인 콜백함수와 clean up함수가 호출되도록" 약속돼있음 (*바뀐 값만 처리하게 함으로써 성능을 향상!)
 
   return (
     <div className="container">
@@ -98,12 +98,16 @@ V->컴포넌트가 한번 만들어진 후에, state/props가 바뀌는 '변화'
 
 
 //함수 스타일 컴포넌트가 실행된 후에, 추가로 필요한 작업을 처리하기 위해 -> *"useEffect함수(훅)"를 이용 
+/*
+'함수' 스타일 컴포넌트의 라이프사이클 (완성X)
+: render -> 'useEffect함수'의 인자로 전달한 함수가 호출돼서 side effect기능 
+-> state/props가 바뀌는 '변화'가 생김 -> render -> 'useEffect함수'의 인자로 전달한 함수가 호출돼서 side effect기능
+*/
 //*useEffect함수 -> render가 실행될때마다 그 후에 실행됨 (클래스 스타일 컴포넌트의 componentDidMount,componentDidUpdate와 같은 효과)
 //컴포넌트의 main effect는 FuncComp이라는 함수가 호출됐을 때 return값을 화면에 그려주는 작업 / side effect는 컴포넌트가 화면에 render된 후에, 컴포넌트의 정보를 다른데서 가져와 나중에 내용을 변경하거나 네트워크 통신 등의 작업
 //*useEffect함수 -> 'side effect'기능을 함 (클래스 스타일 컴포넌트의 componentDidMount,componentDidUpdate와 같은 효과)
 //useEffect를 여러개 설치할 수 있다
 
-//여기부터
 //useEffect-'clean up'개념
 //컴포넌트가 처음으로 DOM에 나타나는 순간에 componentWillMount/componentDidMount를 사용, 컴포넌트가 소멸할 때는 componentWillUnmount를 사용 -> 컴포넌트가 등장할 때/소멸할 때 하는 작업이 구분됨
 //위의 이야기를 useEffect를 사용해서 해보자
@@ -113,7 +117,16 @@ V->컴포넌트가 한번 만들어진 후에, state/props가 바뀌는 '변화'
 : render -> 'useEffect함수'의 인자로 전달한 함수가 호출돼서 side effect기능
 -> state/props가 바뀌는 '변화'가 생김 -> render -> "useEffect의 첫번째 인자로 전달한 함수의 'return값'인 함수가 호출돼서 'clean up(정리)'" ->  'useEffect함수'의 인자로 전달한 함수가 호출돼서 side effect기능
 */
-//useEffect의 clean up함수 -> 클래스 스타일 컴포넌트의 componentWiiUnmount와 같은 효과
 
+//여기부터
+//useEffect-'skipping effect'개념 (*바뀐 값만 처리하게 함으로써 성능을 향상!)
+//**useEffect함수의 두번째 인자로 배열을 전달하고 그 배열에 'number'값을 넣는다 -> "'number'의 state의 값이 바뀌었을 때만, 첫번째 인자인 콜백함수와 clean up함수가 호출되도록" 약속돼있음 (*바뀐 값만 처리하게 함으로써 성능을 향상!)
+/*
+'함수' 스타일 컴포넌트의 라이프사이클 
+: render -> useEffect함수의 첫번째 인자로 전달한 함수(콜백함수!)가 호출돼서 side effect기능
+-> number라는 state의 값이 바뀌는 '변화'가 생김(random버튼 클릭) -> render -> useEffect의 첫번째 인자로 전달한 함수의 'return값'인 함수가 호출돼서 clean up(정리) ->  useEffect함수의 첫번째 인자로 전달한 함수(콜백함수)가 호출돼서 side effect기능
+(**date버튼을 클릭하면, 콜백함수와 clean up함수 호출안됨 -> useEffect함수의 두번째 인자로 전달된 배열에 있는 'number'라는 state의 값을 바꾸는 것이 아니라, _date라는 state의 값을 바꾸는 것이기 때문 )
+*/
+//useEffect함수의 두번째 인자로 '빈 배열'을 전달하면 -> render후에 useEffect함수의 첫번째 인자로 전달한 함수가 딱 한번 호출되고, 이후에 state값이 바뀌어도 호출되지 않음 (클래스 스타일 컴포넌트의 componentDidMount만 실행하는 것과 같음)
 
 

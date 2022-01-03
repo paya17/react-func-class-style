@@ -18,10 +18,13 @@ function FuncComp(props) {
   var [number, setNumber] = useState(props.initNumber);  
   var [_date, setDate] = useState((new Date()).toString()); 
 
-  //side effect
-  useEffect(function() {
-    document.title = number + ':' + _date; //화면이 아닌 title값을 바꾸는 작업(*컴포넌트가 렌더링되는 작업과 상관X)->useEffect함수의 'side effect'기능
-  }); //*useEffect함수 사용! (컴포넌트 return전에 작성?!, useEffect함수의 첫번째 인자로 함수가 들어와야 함)
+  useEffect(function() { //'useEffect함수'의 인자로 전달한 함수 -> side effect기능
+    document.title = number + ':' + _date; 
+    
+    return function() { //*useEffect의 첫번째 인자로 전달한 함수의, "return값"인 함수 -> 'clean up(정리)'
+      //아무거나..
+    }
+  }); 
 
   return (
     <div className="container">
@@ -93,17 +96,24 @@ V->컴포넌트가 한번 만들어진 후에, state/props가 바뀌는 '변화'
 //*클래스 스타일 컴포넌트의 라이프사이클에서 원하는 타이밍에 코드를 추가하고 싶으면, 정해진 이름의 메서드(라이프사이클API)를 구현
 //mount:화면에 그려짐
 
-//여기부터
+
 //함수 스타일 컴포넌트가 실행된 후에, 추가로 필요한 작업을 처리하기 위해 -> *"useEffect함수(훅)"를 이용 
-/*
-'함수' 스타일 컴포넌트의 라이프사이클 (완성X)
-: render -> 'useEffect함수'의 인자로 전달한 함수가 호출됨 -> state/props가 바뀌는 '변화'가 생김 -> render -> 'useEffect함수'의 인자로 전달한 함수가 호출됨
-*/
 //*useEffect함수 -> render가 실행될때마다 그 후에 실행됨 (클래스 스타일 컴포넌트의 componentDidMount,componentDidUpdate와 같은 효과)
 //컴포넌트의 main effect는 FuncComp이라는 함수가 호출됐을 때 return값을 화면에 그려주는 작업 / side effect는 컴포넌트가 화면에 render된 후에, 컴포넌트의 정보를 다른데서 가져와 나중에 내용을 변경하거나 네트워크 통신 등의 작업
 //*useEffect함수 -> 'side effect'기능을 함 (클래스 스타일 컴포넌트의 componentDidMount,componentDidUpdate와 같은 효과)
 //useEffect를 여러개 설치할 수 있다
 
+//여기부터
+//useEffect-'clean up'개념
+//컴포넌트가 처음으로 DOM에 나타나는 순간에 componentWillMount/componentDidMount를 사용, 컴포넌트가 소멸할 때는 componentWillUnmount를 사용 -> 컴포넌트가 등장할 때/소멸할 때 하는 작업이 구분됨
+//위의 이야기를 useEffect를 사용해서 해보자
+//*'변화'가 생겨서 다시 한번 render 후에 'useEffect함수'의 인자로 전달한 함수가 다시 실행되기 전에, '그 이전에 실행했던 것을 정리하기 위해', useEffect의 첫번째 인자로 전달한 함수의 "return값"인 함수(함수여야함!)를 실행해서 'clean up(정리)'
+/*
+'함수' 스타일 컴포넌트의 라이프사이클 (완성X)
+: render -> 'useEffect함수'의 인자로 전달한 함수가 호출돼서 side effect기능
+-> state/props가 바뀌는 '변화'가 생김 -> render -> "useEffect의 첫번째 인자로 전달한 함수의 'return값'인 함수가 호출돼서 'clean up(정리)'" ->  'useEffect함수'의 인자로 전달한 함수가 호출돼서 side effect기능
+*/
+//useEffect의 clean up함수 -> 클래스 스타일 컴포넌트의 componentWiiUnmount와 같은 효과
 
 
 

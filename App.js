@@ -14,15 +14,9 @@ function App() {
 //--------------------------------------------------------------------------------------//
 
 function FuncComp(props) { 
-  //var numberState = useState(props.initNumber);  
-  //var number = numberState[0]; 
-  //var setNumber = numberState[1]; 
-  var [number, setNumber] = useState(props.initNumber); //세줄의 코드를 한줄로 줄여서 개선, 배열을 나타내는 []기호 안에 변수 이름을 넣는다, *useState의 반환값인 배열의 각 요소 값이 number,setNumber변수에 할당됨, dateState변수가 필요 없어짐
-
-  //var dateState = useState((new Date()).toString());  //'state'의 초깃값 지정 
-  //var _date = dateState[0]; 
-  //var setDate = dateState[1]; 
-  var [_date, setDate] = useState((new Date()).toString());
+   
+  var [number, setNumber] = useState(props.initNumber);  
+  var [_date, setDate] = useState((new Date()).toString()); //('state'의 초깃값 지정) 
 
   return (
     <div className="container">
@@ -79,25 +73,19 @@ export default App;
 - *'함수' 스타일로 '컴포넌트' 만들기 -> 최신 기능인 '훅'을 도입해, 컴포넌트 내부의 <state>와, 컴포넌트의 <라이프사이클>을 다룰 수 있게 됨
 */
 
-//'클래스' 스타일 컴포넌트의 props와 state
-//state를 설정하고 초기화하고, 그 state값을 사용하고, 변경하기
-
-/*
-'함수' 스타일 컴포넌트의 props와 state
-->*함수 스타일 컴포넌트의 함수의 첫번째 인자로 'props'값이 전달되도록 약속돼있음 (this 이용해서, props 전달받지 않는다!)
-->**"useState함수(훅)"을 이용해, 'state' 사용 가능
-*/
-//useState함수의 인자로 state의 초깃값을 지정
-//useState함수의 반환값은 길이가 2인 배열
-
-//클래스 스타일 컴포넌트와 함수 스타일 컴포넌트에, 임의의 값을 발생시키는 random버튼을 만들었다 
-
 //여기부터
-//클래스 스타일 컴포넌트와 함수 스타일 컴포넌트에, 현재시각이 나오는 date버튼을 만들기 (new Date() 사용!)
-//*'state'의 초깃값 지정, 'state값' 사용, 'state값' 변경
-
-
-
+//컴포넌트의 '생로병사'와 관련된 기능이, '라이프사이클'
+/*
+'클래스' 스타일 컴포넌트의 라이프사이클 
+: 'componentWillMount메서드'가 호출됨(컴포넌트가 mount되기 전에(render메서드가 호출되기 전에), 처리해야 할 일을 함) -> 'render메서드'가 호출돼서, mount됨(화면에 그려짐)
+-> 'componentDidMount메서드'가 호출됨(화면에 그려진 후에(render메서드가 실행된 후에), 추가로 처리해야 하거나 네트워크에서 뭔가 내려 받아 처리해야 할 일을 함)
+V->컴포넌트가 한번 만들어진 후에, state/props가 바뀌는 '변화'가 생기면(ex)random버튼을 클릭) render메서드가 호출될 것임 
+-> render메서드가 호출되기 전에, render메서드를 호출할 필요가 있는지 없는지를 결정하는'shouldComponentUpdate메서드'가 호출돼서 true를 return하면 render를 호출, false를 return하면 render를 호출 안함
+->(shouldComponentUpdate메서드가 true를 return했다고 하면) 'componentWillUpdate메서드'가 호출됨 -> 'render메서드'가 호출됨 -> 'componentDidUpdate메서드'가 호출됨
+('componentWillUnmount메서드'는 컴포넌트가 소멸될 때 호출됨)
+*/
+//*클래스 스타일 컴포넌트의 라이프사이클에서 원하는 타이밍에 코드를 추가하고 싶으면, 정해진 이름의 메서드(라이프사이클API)를 구현
+//mount:화면에 그려짐
 
 
 
